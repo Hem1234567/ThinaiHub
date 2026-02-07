@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="manifest" href="manifest.json">
+    <script src="scripts/security.js"></script>
     <style>
         .admin-page {
             padding: 40px;
@@ -223,8 +224,39 @@
     </div>
 
     <script type="module">
-        import { db } from './scripts/firebase-config.js';
+        import { db, auth } from './scripts/firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- Strict Admin Verification ---
+        // This runs immediately.
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    // Check against Firestore (Secure Source of Truth)
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.role !== 'admin') {
+                            alert("Access Denied: Admins Only.");
+                            window.location.href = "index.html";
+                        } else {
+                            // User is admin, allow access & load initial data
+                            showPanel('dashboard');
+                        }
+                    } else {
+                        // User doc doesn't exist? Treat as non-admin.
+                        window.location.href = "index.html";
+                    }
+                } catch (error) {
+                    console.error("Error verifying admin role:", error);
+                    window.location.href = "index.html";
+                }
+            } else {
+                // Not logged in
+                window.location.href = "login.html";
+            }
+        });
 
         // Expose functions to window
         window.showPanel = showPanel;
@@ -487,7 +519,7 @@
         }
 
         // Init
-        showPanel('dashboard');
+        // showPanel('dashboard'); // Moved to auth check
     </script>
 </body>
 
