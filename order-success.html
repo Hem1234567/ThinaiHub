@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- html2pdf Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .success-page {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-primary);
+            color: var(--color-bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+        }
+
+        .success-actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Invoice Styles */
+        .invoice-container {
+            background: white;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            border: 1px solid #eee;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .invoice-logo img {
+            height: 60px;
+        }
+
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .invoice-to h4,
+        .invoice-info h4 {
+            color: var(--color-primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .invoice-table th {
+            background: var(--color-bg-beige);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-primary-dark);
+        }
+
+        .invoice-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-total {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="container success-page">
+        <div class="success-icon">✓</div>
+        <h1 class="reveal-scale">Order Placed Successfully!</h1>
+        <p class="reveal-scale delay-100">Thank you for your purchase. A confirmation email has been sent.</p>
+
+        <div class="success-actions reveal delay-200">
+            <button class="btn btn-secondary" onclick="generatePDF()">Download Invoice</button>
+            <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+        </div>
+
+        <!-- Invoice Template (Hidden until download) -->
+        <div id="invoice" class="invoice-container reveal-up delay-300">
+            <div class="invoice-header">
+                <div class="invoice-logo">
+                    <img src="assets/images/logo.png" alt="ThinaiHub">
+                    <p>Modern Health rooted in Ancient Tradition.</p>
+                </div>
+                <div class="invoice-title">
+                    <h2 style="color: var(--color-primary);">INVOICE</h2>
+                </div>
+            </div>
+
+            <div class="invoice-details">
+                <div class="invoice-to">
+                    <h4>Bill To:</h4>
+                    <p id="bill-name">Customer Name</p>
+                    <p id="bill-address">123 Street Name</p>
+                    <p id="bill-contact">City, Zip Code</p>
+                </div>
+                <div class="invoice-info">
+                    <h4>Order Details:</h4>
+                    <p><strong>Order ID:</strong> <span id="order-id">#TH-123456</span></p>
+                    <p><strong>Date:</strong> <span id="order-date">Oct 24, 2024</span></p>
+                    <p><strong>Payment Method:</strong> <span id="payment-method-display">COD</span></p>
+                </div>
+            </div>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="invoice-items">
+                    <!-- Items here -->
+                </tbody>
+            </table>
+
+            <div class="invoice-total">
+                <p>Total Amount: <span id="invoice-total">₹0</span></p>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center; color: #777; font-size: 0.9rem;">
+                <p>Thank you for choosing ThinaiHub!</p>
+                <p>For support: support@thinaihub.com</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>ThinaiHub</h2>
+            </div>
+            <div class="footer-contact">
+                <p>support@thinaihub.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Retrieve Order Data
+            const lastOrder = JSON.parse(localStorage.getItem('thinaiHubLastOrder'));
+
+            if (!lastOrder) {
+                // If no order data, redirect to home (commented out for testing/viewing)
+                // window.location.href = 'index.html';
+                return;
+            }
+
+            // Populate Invoice
+            document.getElementById('order-id').textContent = '#' + lastOrder.id;
+            document.getElementById('order-date').textContent = new Date(lastOrder.date).toLocaleDateString();
+            document.getElementById('payment-method-display').textContent = lastOrder.paymentMethod.toUpperCase();
+
+            document.getElementById('bill-name').textContent = `${lastOrder.customer.firstName} ${lastOrder.customer.lastName}`;
+            document.getElementById('bill-address').textContent = lastOrder.customer.address;
+            document.getElementById('bill-contact').textContent = `${lastOrder.customer.city}, ${lastOrder.customer.zip}`;
+
+            const itemsContainer = document.getElementById('invoice-items');
+            let total = 0;
+            let html = '';
+
+            lastOrder.items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>₹${item.price}</td>
+                        <td>${item.quantity}</td>
+                        <td>₹${itemTotal}</td>
+                    </tr>
+                `;
+            });
+
+            itemsContainer.innerHTML = html;
+            document.getElementById('invoice-total').textContent = '₹' + total;
+        });
+
+        function generatePDF() {
+            const element = document.getElementById('invoice');
+            const opt = {
+                margin: 10,
+                filename: 'ThinaiHub-Invoice.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Choose the element and save the PDF for our user.
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+
+</html>

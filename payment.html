@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .checkout-page {
+            padding: 120px 0 60px;
+            min-height: 80vh;
+        }
+
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .checkout-form,
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .checkout-form h2,
+        .order-summary h2 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: var(--color-primary-dark);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-border);
+        }
+
+        .payment-methods {
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .payment-method {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method.active {
+            border-color: var(--color-primary);
+            background-color: var(--color-bg-beige);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                order: -1;
+                /* Show summary first on mobile */
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="story.html">Our Story</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-btn" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="mobile-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Checkout Content -->
+    <section class="container checkout-page">
+        <div class="checkout-container">
+            <!-- Left: Form -->
+            <div class="checkout-form reveal-left">
+                <h2>Shipping Details</h2>
+                <form id="payment-form" onsubmit="event.preventDefault(); placeOrder();">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" placeholder="Street address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Zip Code</label>
+                            <input type="text" required>
+                        </div>
+                    </div>
+
+                    <h2>Payment Method</h2>
+                    <div class="payment-methods">
+                        <div class="payment-method active" data-method="card" onclick="selectPayment(this)">Credit Card
+                        </div>
+                        <div class="payment-method" data-method="upi" onclick="selectPayment(this)">UPI / Netbanking
+                        </div>
+                        <div class="payment-method" data-method="cod" onclick="selectPayment(this)">COD</div>
+                    </div>
+
+                    <!-- Credit Card Details -->
+                    <div id="card-details" class="payment-details">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="XXXX XXXX XXXX XXXX">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Expiry</label>
+                                <input type="text" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label>CVC</label>
+                                <input type="text" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI Details -->
+                    <div id="upi-details" class="payment-details" style="display: none; text-align: center;">
+                        <p style="margin-bottom: 15px;">Scan QR Code to Pay</p>
+                        <img src="assets/images/upi-qr.jpg" alt="UPI QR Code"
+                            style="max-width: 200px; border: 1px solid #ddd; border-radius: 8px; display: block; margin: 0 auto;">
+                    </div>
+
+                    <!-- COD Details -->
+                    <div id="cod-details" class="payment-details" style="display: none; text-align: center;">
+                        <p>Pay cash upon delivery. No extra charges.</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Place
+                        Order</button>
+                </form>
+            </div>
+
+            <!-- Right: Summary -->
+            <div class="order-summary reveal">
+                <h2>Order Summary</h2>
+                <div id="checkout-items">
+                    <!-- Items injected via JS -->
+                    <p>Loading items...</p>
+                </div>
+
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="checkout-total">₹0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>ThinaiHub</h2>
+                <p>Modern Health rooted in Ancient Tradition.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="story.html">Our Story</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Tamil Nadu, India</p>
+                <p>support@thinaihub.com</p>
+                <div class="socials">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        // Simple inline script to populate checkout for now, or move to main.js
+        function selectPayment(el) {
+            // Update active class
+            document.querySelectorAll('.payment-method').forEach(e => e.classList.remove('active'));
+            el.classList.add('active');
+
+            // Toggle Content
+            const method = el.getAttribute('data-method');
+            document.querySelectorAll('.payment-details').forEach(div => div.style.display = 'none');
+
+            if (method === 'card') {
+                document.getElementById('card-details').style.display = 'block';
+            } else if (method === 'upi') {
+                document.getElementById('upi-details').style.display = 'block';
+            } else if (method === 'cod') {
+                document.getElementById('cod-details').style.display = 'block';
+            }
+        }
+
+        function placeOrder() {
+            // Get Form Values
+            const form = document.getElementById('payment-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const inputs = form.querySelectorAll('input');
+            const customer = {
+                firstName: inputs[0].value || 'John', // Fallbacks for testing if fields empty
+                lastName: inputs[1].value || 'Doe',
+                address: inputs[3].value || '123 Health St',
+                city: inputs[4].value || 'Chennai',
+                zip: inputs[5].value || '600001'
+            };
+
+            // Get active payment method
+            const activeMethod = document.querySelector('.payment-method.active').dataset.method;
+
+            // Get Cart
+            const cart = JSON.parse(localStorage.getItem('thinaiHubCart')) || [];
+
+            // Create Order Object
+            const order = {
+                id: Date.now().toString().slice(-6),
+                date: new Date().toISOString(),
+                customer: customer,
+                paymentMethod: activeMethod,
+                items: cart
+            };
+
+            // Save to LocalStorage for Invoice Page
+            localStorage.setItem('thinaiHubLastOrder', JSON.stringify(order));
+
+            // Clear Cart
+            localStorage.removeItem('thinaiHubCart');
+
+            // Redirect
+            window.location.href = 'order-success.html';
+        }
+
+        // Initialize checkout data
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('thinaiHubCart')) || [];
+            const container = document.getElementById('checkout-items');
+            const totalEl = document.getElementById('checkout-total');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="summary-item">
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span>₹${item.price * item.quantity}</span>
+                    </div>
+                `;
+            });
+
+            // Add Shipping
+            html += `
+                <div class="summary-item" style="color: var(--color-text-muted); font-size: 0.9rem;">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            totalEl.textContent = '₹' + total;
+        });
+    </script>
+</body>
+
+</html>

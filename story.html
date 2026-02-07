@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .story-hero {
+            background-color: var(--color-bg-light);
+            padding: 120px 0 20px;
+            /* Reduced bottom padding */
+            text-align: center;
+        }
+
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px var(--spacing-md) var(--spacing-xl);
+            /* Reduced top padding */
+            text-align: left;
+        }
+
+        .story-content p {
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .quote {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            font-style: italic;
+            text-align: center;
+            margin: 40px 0;
+            border-left: 4px solid var(--color-secondary);
+            padding-left: 20px;
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="story.html" class="active">Our Story</a></li>
+
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-btn" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="mobile-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="story-hero">
+        <div class="container">
+            <h1 class="reveal-scale">Rooted in Tradition</h1>
+            <p class="reveal-scale delay-100">The journey of ThinaiHub</p>
+        </div>
+    </header>
+
+    <section class="container story-content">
+        <p class="reveal">
+            In the heart of Tamil Nadu, where the soil is rich and the sun shines with purpose, the tradition of growing
+            millets has been passed down through generations. These ancient grains, once the staple of warriors and
+            farmers alike, are the secret to vitality and longevity.
+        </p>
+
+        <div class="quote reveal delay-100">
+            "We don't just grow millets; we cultivate a legacy of health."
+        </div>
+
+        <p class="reveal delay-200">
+            At <strong>ThinaiHub</strong>, our mission is simple: to bring this ancient goodness back to the modern
+            table. We partner directly with local farmers who use sustainable, rain-fed agricultural practices. This
+            ensures that every grain of Thinai (Foxtail), Varagu (Kodo), or Kambu (Pearl Millet) you buy is 100% organic
+            and ethically sourced.
+        </p>
+        <p class="reveal delay-300">
+            We believe that true health comes from nature. That's why our processing is minimal, retaining the bran and
+            the essential nutrients that are often lost in modern refining. By choosing ThinaiHub, you are not just
+            choosing a healthy meal; you are supporting a community of farmers and preserving a culinary heritage that
+            has stood the test of time.
+        </p>
+
+        <div class="text-center mt-2">
+            <a href="shop.html" class="btn btn-primary">Join the Movement</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>ThinaiHub</h2>
+                <p>Modern Health rooted in Ancient Tradition.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="story.html">Our Story</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Tamil Nadu, India</p>
+                <p>support@thinaihub.com</p>
+                <div class="socials">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>

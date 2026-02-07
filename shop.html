@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .shop-header {
+            background-color: transparent;
+            /* Removed background */
+            color: var(--color-primary-dark);
+            /* Dark text for visibility */
+            padding: 120px 0 20px;
+            /* Reduced bottom padding */
+            text-align: center;
+        }
+
+        .shop-grid {
+            padding: var(--spacing-xl) 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            /* Mobile default */
+            gap: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .shop-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .shop-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation (Same as Home) -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html" class="active">Shop</a></li>
+                <li><a href="story.html">Our Story</a></li>
+
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-btn" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="mobile-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="shop-header">
+        <div class="container">
+            <h1 class="reveal-scale">Our Harvest</h1>
+            <p class="reveal-scale delay-100">Pure, organic millets from our farms to your table.</p>
+        </div>
+    </header>
+
+    <!-- Product Grid -->
+    <section class="container shop-grid">
+        <!-- 1. Foxtail Millet -->
+        <div class="product-card reveal delay-100">
+            <div class="card-image">
+                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
+                <div class="product-details">
+                    <h3>Foxtail Millet <span class="tamil">(தினை)</span></h3>
+                    <p>Rich in fiber and protein. Ideal for diabetes management.</p>
+                </div>
+            </div>
+            <div class="card-action">
+                <p class="price">₹150 <small>/ 500g</small></p>
+                <button class="btn btn-primary add-to-cart" data-name="Foxtail Millet">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- 2. Kodo Millet -->
+        <div class="product-card reveal delay-150">
+            <div class="card-image">
+                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
+                <div class="product-details">
+                    <h3>Kodo Millet <span class="tamil">(வரகு)</span></h3>
+                    <p>High in antioxidants and good for digestion.</p>
+                </div>
+            </div>
+            <div class="card-action">
+                <p class="price">₹145 <small>/ 500g</small></p>
+                <button class="btn btn-primary add-to-cart" data-name="Kodo Millet">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- 3. Barnyard Millet -->
+        <div class="product-card reveal delay-200">
+            <div class="card-image">
+                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
+                <div class="product-details">
+                    <h3>Barnyard Millet <span class="tamil">(குதிரைவாலி)</span></h3>
+                    <p>Low glycemic index. Perfect for weight loss.</p>
+                </div>
+            </div>
+            <div class="card-action">
+                <p class="price">₹155 <small>/ 500g</small></p>
+                <button class="btn btn-primary add-to-cart" data-name="Barnyard Millet">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- 4. Little Millet -->
+        <div class="product-card reveal delay-250">
+            <div class="card-image">
+                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
+                <div class="product-details">
+                    <h3>Little Millet <span class="tamil">(சாமை)</span></h3>
+                    <p>Packed with iron and minerals.</p>
+                </div>
+            </div>
+            <div class="card-action">
+                <p class="price">₹160 <small>/ 500g</small></p>
+                <button class="btn btn-primary add-to-cart" data-name="Little Millet">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- 5. Pearl Millet -->
+        <div class="product-card reveal delay-300">
+            <div class="card-image">
+                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
+                <div class="product-details">
+                    <h3>Pearl Millet <span class="tamil">(கம்பு)</span></h3>
+                    <p>Cooling properties, great for summer.</p>
+                </div>
+            </div>
+            <div class="card-action">
+                <p class="price">₹140 <small>/ 500g</small></p>
+                <button class="btn btn-primary add-to-cart" data-name="Pearl Millet">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>ThinaiHub</h2>
+                <p>Modern Health rooted in Ancient Tradition.</p>
+            </div>
+            <!-- ... same footer links ... -->
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="story.html">Our Story</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Tamil Nadu, India</p>
+                <p>support@thinaihub.com</p>
+                <div class="socials">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>

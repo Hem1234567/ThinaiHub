@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .cart-page {
+            padding: 120px 0 60px;
+            min-height: 60vh;
+        }
+
+        .cart-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--color-primary-dark);
+        }
+
+        .cart-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .cart-empty p {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            margin-bottom: 20px;
+        }
+
+        .cart-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .cart-items th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid var(--color-bg-beige);
+            color: var(--color-primary-dark);
+            font-family: var(--font-heading);
+        }
+
+        .cart-items td {
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--color-bg-light);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            background: var(--color-bg-beige);
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--color-primary-dark);
+        }
+
+        .remove-btn {
+            color: #d9534f;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+
+        .cart-summary {
+            background-color: var(--color-bg-light);
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 40px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .total-row {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-items thead {
+                display: none;
+            }
+
+            .cart-items tr {
+                display: block;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
+
+            .cart-items td {
+                display: block;
+                text-align: right;
+                padding: 5px 0;
+                border: none;
+            }
+
+            .cart-items td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                color: var(--color-text-muted);
+            }
+
+            .item-info {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="story.html">Our Story</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-btn active" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="mobile-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Content -->
+    <section class="container cart-page">
+        <h1 class="cart-title">Your Cart</h1>
+
+        <div class="cart-container" id="cart-content">
+            <!-- Items will be injected here via JS -->
+            <div class="cart-empty">
+                <p>Your cart is currently empty.</p>
+                <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2>ThinaiHub</h2>
+                <p>Modern Health rooted in Ancient Tradition.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="story.html">Our Story</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Tamil Nadu, India</p>
+                <p>support@thinaihub.com</p>
+                <div class="socials">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>
