@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 120px auto 60px;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            margin-bottom: 30px;
+            color: var(--color-primary-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text-muted);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .google-btn {
+            background: white;
+            color: #444;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .google-btn:hover {
+            background: #f9f9f9;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container reveal">
+        <h2>Create Account</h2>
+        <form id="signup-form">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Sign Up</button>
+        </form>
+
+        <div style="margin: 20px 0; color: #aaa; font-size: 0.9rem;">OR</div>
+
+        <button id="google-login" class="btn google-btn btn-full">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google">
+            Sign up with Google
+        </button>
+
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+            Already have an account? <a href="login.html" style="color: var(--color-primary); font-weight: 600;">Sign
+                In</a>
+        </p>
+    </div>
+
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
+</body>
+
+</html>

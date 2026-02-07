@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinaiHub Admin</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <style>
+        .admin-page {
+            padding: 40px;
+            background: #f4f4f4;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-content {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .sidebar button {
+            width: 100%;
+            text-align: left;
+            padding: 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar button.active {
+            background: var(--color-primary);
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #f9f9f9;
+            color: var(--color-primary-dark);
+        }
+
+        .status-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .product-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .product-form input,
+        .product-form textarea {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-page">
+        <div class="admin-header">
+            <h2>ThinaiHub Admin Panel</h2>
+            <a href="index.html" class="btn btn-secondary">View Site</a>
+        </div>
+
+        <div class="admin-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <button class="active" onclick="showPanel('dashboard')">Dashboard</button>
+                <button onclick="showPanel('orders')">Orders</button>
+                <button onclick="showPanel('products')">Products</button>
+                <button onclick="showPanel('customers')">Customers</button>
+            </div>
+
+            <!-- Dashboard Panel -->
+            <div id="dashboard" class="panel active">
+                <h3>Dashboard Overview</h3>
+                <div class="stats-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%); color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3);">
+                        <h4 style="margin: 0; opacity: 0.9; font-weight: 500;">Total Revenue</h4>
+                        <p id="stat-revenue" style="font-size: 2rem; font-weight: bold; margin: 10px 0 0;">₹0</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #4834d4 0%, #686de0 100%); color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(104, 109, 224, 0.3);">
+                        <h4 style="margin: 0; opacity: 0.9; font-weight: 500;">Total Orders</h4>
+                        <p id="stat-orders" style="font-size: 2rem; font-weight: bold; margin: 10px 0 0;">0</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #6ab04c 0%, #badc58 100%); color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(186, 220, 88, 0.3);">
+                        <h4 style="margin: 0; opacity: 0.9; font-weight: 500;">Total Products</h4>
+                        <p id="stat-products" style="font-size: 2rem; font-weight: bold; margin: 10px 0 0;">0</p>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #f0932b 0%, #ffbe76 100%); color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(255, 190, 118, 0.3);">
+                        <h4 style="margin: 0; opacity: 0.9; font-weight: 500;">Total Customers</h4>
+                        <p id="stat-customers" style="font-size: 2rem; font-weight: bold; margin: 10px 0 0;">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Panel -->
+            <div id="orders" class="panel active">
+                <h3>Recommended Orders</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table"></tbody>
+                </table>
+            </div>
+
+            <!-- Products Panel -->
+            <div id="products" class="panel">
+                <h3>Manage Products</h3>
+
+                <form id="add-product-form" class="product-form" onsubmit="event.preventDefault(); saveProduct();">
+                    <h4 id="form-title">Add New Product</h4>
+                    <input type="hidden" id="p-id"> <!-- Hidden ID for Editing -->
+                    <input type="text" id="p-name" placeholder="Product Name" required>
+                    <input type="text" id="p-tamil" placeholder="Tamil Name">
+                    <input type="number" id="p-price" placeholder="Price" required>
+                    <input type="text" id="p-weight" placeholder="Weight (e.g. 500g)">
+                    <input type="text" id="p-desc" placeholder="Description">
+                    <div style="display:flex; gap:10px;">
+                        <button type="submit" class="btn btn-primary" id="save-btn">Add Product</button>
+                        <button type="button" class="btn btn-secondary" style="display:none;" id="cancel-btn"
+                            onclick="resetForm()">Cancel</button>
+                    </div>
+                </form>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tamil</th>
+                            <th>Price</th>
+                            <th>Weight</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table"></tbody>
+                </table>
+            </div>
+
+            <!-- Customers Panel -->
+            <div id="customers" class="panel">
+                <h3>Manage Customers</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from './scripts/firebase-config.js';
+        import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Expose functions to window
+        window.showPanel = showPanel;
+        window.updateStatus = updateStatus;
+        window.saveProduct = saveProduct;
+        window.deleteProduct = deleteProduct;
+        window.editProduct = editProduct;
+        window.resetForm = resetForm;
+        window.deleteUser = deleteUser;
+        // window.editUser = editUser; // Simplified for now
+
+        let productsCache = []; // Cache to help with editing
+
+        async function showPanel(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+
+            const buttons = document.querySelectorAll('.sidebar button');
+            if (id === 'dashboard') buttons[0].classList.add('active');
+            if (id === 'orders') buttons[1].classList.add('active');
+            if (id === 'products') buttons[2].classList.add('active');
+            if (id === 'customers') buttons[3].classList.add('active');
+
+            if (id === 'dashboard') fetchStats();
+            if (id === 'orders') fetchOrders();
+            if (id === 'products') fetchProducts();
+            if (id === 'customers') fetchCustomers();
+        }
+
+        async function fetchStats() {
+            try {
+                // Fetch Orders for Revenue and Count
+                const ordersSnap = await getDocs(collection(db, "orders"));
+                let totalRevenue = 0;
+                let totalOrders = 0;
+                ordersSnap.forEach((doc) => {
+                    totalOrders++;
+                    const data = doc.data();
+                    // Calculate total from items if specific total field is missing, or use data.total
+                    if (data.items) {
+                        const orderTotal = data.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+                        totalRevenue += orderTotal;
+                    }
+                });
+
+                // Fetch Products Count
+                const productsSnap = await getDocs(collection(db, "products"));
+                const totalProducts = productsSnap.size;
+
+                // Fetch Users Count
+                const usersSnap = await getDocs(collection(db, "users"));
+                const totalCustomers = usersSnap.size;
+
+                // Update UI
+                document.getElementById('stat-revenue').textContent = '₹' + totalRevenue.toLocaleString();
+                document.getElementById('stat-orders').textContent = totalOrders;
+                document.getElementById('stat-products').textContent = totalProducts;
+                document.getElementById('stat-customers').textContent = totalCustomers;
+
+            } catch (err) {
+                console.error("Error fetching stats:", err);
+            }
+        }
+
+        // --- Orders ---
+        async function fetchOrders() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "orders"));
+                const orders = [];
+                querySnapshot.forEach((doc) => {
+                    orders.push({ id: doc.id, ...doc.data() });
+                });
+
+                const tbody = document.getElementById('orders-table');
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No orders found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = orders.map(o => {
+                    const isCancelled = o.status === 'Cancelled';
+                    return `
+                    <tr style="${isCancelled ? 'background-color: #fee;' : ''}">
+                        <td>#${o.id.slice(0, 8)}</td>
+                        <td>${o.date ? new Date(o.date).toLocaleDateString() : '-'}</td>
+                        <td>${o.customer ? o.customer.firstName + ' ' + o.customer.lastName : 'Guest'}</td>
+                        <td>₹${o.items ? o.items.reduce((sum, i) => sum + (i.price * i.quantity), 0) : 0}</td>
+                        <td>
+                            <select class="status-select" onchange="updateStatus('${o.id}', this.value)" 
+                                style="${isCancelled ? 'color: #d32f2f; border-color: #d32f2f;' : ''}">
+                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                    </tr>
+                `}).join('');
+            } catch (err) {
+                console.error("Error fetching orders:", err);
+            }
+        }
+
+        async function updateStatus(id, status) {
+            try {
+                const orderRef = doc(db, "orders", id);
+                await updateDoc(orderRef, { status: status });
+                alert('Order status updated!');
+            } catch (err) {
+                console.error("Error updating status:", err);
+                alert('Failed to update status.');
+            }
+        }
+
+        // --- Products ---
+        async function fetchProducts() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                productsCache = [];
+                querySnapshot.forEach((doc) => {
+                    productsCache.push({ id: doc.id, ...doc.data() });
+                });
+
+                const tbody = document.getElementById('products-table');
+                if (productsCache.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No products found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = productsCache.map(p => `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${p.tamilName || '-'}</td>
+                        <td>₹${p.price}</td>
+                        <td>${p.weight || '500g'}</td>
+                        <td>
+                            <button onclick="editProduct('${p.id}')" style="color: blue; margin-right: 10px;">Edit</button>
+                            <button onclick="deleteProduct('${p.id}')" style="color: red;">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error("Error fetching products:", err);
+            }
+        }
+
+        function editProduct(id) {
+            const product = productsCache.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('p-id').value = id;
+            document.getElementById('p-name').value = product.name;
+            document.getElementById('p-tamil').value = product.tamilName || '';
+            document.getElementById('p-price').value = product.price;
+            document.getElementById('p-weight').value = product.weight || '';
+            document.getElementById('p-desc').value = product.description || '';
+
+            // Update UI
+            document.getElementById('form-title').textContent = 'Edit Product';
+            document.getElementById('save-btn').textContent = 'Update Product';
+            document.getElementById('cancel-btn').style.display = 'inline-block';
+            window.scrollTo(0, 0);
+        }
+
+        function resetForm() {
+            document.getElementById('add-product-form').reset();
+            document.getElementById('p-id').value = '';
+            document.getElementById('form-title').textContent = 'Add New Product';
+            document.getElementById('save-btn').textContent = 'Add Product';
+            document.getElementById('cancel-btn').style.display = 'none';
+        }
+
+        async function saveProduct() {
+            const id = document.getElementById('p-id').value;
+            const product = {
+                name: document.getElementById('p-name').value,
+                tamilName: document.getElementById('p-tamil').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                weight: document.getElementById('p-weight').value || '500g',
+                description: document.getElementById('p-desc').value,
+                image: 'assets/products/img-1.jpg' // Keep default for now or preserve existing if editing
+            };
+
+            try {
+                if (id) {
+                    // Update
+                    const productRef = doc(db, "products", id);
+                    await updateDoc(productRef, product);
+                    alert('Product Updated!');
+                } else {
+                    // Add
+                    await addDoc(collection(db, "products"), product);
+                    alert('Product Added!');
+                }
+                resetForm();
+                fetchProducts();
+            } catch (err) {
+                console.error("Error saving product:", err);
+                // Note: Security rules might block this if not authenticated/authorized
+                alert('Failed to save product: ' + err.message);
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            try {
+                await deleteDoc(doc(db, "products", id));
+                fetchProducts();
+            } catch (err) {
+                console.error("Error deleting product:", err);
+                alert('Failed to delete product.');
+            }
+        }
+
+        // --- Customers ---
+        async function fetchCustomers() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                const users = [];
+                querySnapshot.forEach((doc) => {
+                    users.push({ id: doc.id, ...doc.data() });
+                });
+
+                const tbody = document.getElementById('customers-table');
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No users found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.email}</td>
+                        <td>${u.role || 'user'}</td>
+                        <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
+                        <td>
+                            <button onclick="deleteUser('${u.id}')" style="color: red;">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error("Error fetching users:", err);
+                // Friendly error if restricted
+                if (err.code === 'permission-denied') {
+                    document.getElementById('customers-table').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Access Denied: You need permission to view users.</td></tr>';
+                }
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Are you sure you want to remove this user from the database?')) return;
+            try {
+                await deleteDoc(doc(db, "users", id));
+                fetchCustomers();
+            } catch (err) {
+                console.error("Error deleting user:", err);
+                alert('Failed to delete user.');
+            }
+        }
+
+        // Init
+        showPanel('dashboard');
+    </script>
+</body>
+
+</html>

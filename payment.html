@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout | ThinaiHub</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <style>
         .checkout-page {
             padding: 120px 0 60px;
@@ -285,9 +286,57 @@
         </div>
     </footer>
 
-    <script src="scripts/main.js"></script>
-    <script>
-        // Simple inline script to populate checkout for now, or move to main.js
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
+    <script type="module">
+        import { auth, db } from './scripts/firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Expose functions to window
+        window.selectPayment = selectPayment;
+        window.placeOrder = placeOrder;
+
+        let currentUser = null;
+
+        // --- 1. Load User Address on Page Load ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Pre-fill email/name from Auth defaults
+                const inputs = document.querySelectorAll('input');
+                if (user.email) inputs[2].value = user.email; // Email field
+                if (user.displayName) {
+                    const names = user.displayName.split(' ');
+                    inputs[0].value = names[0] || ''; // First Name
+                    inputs[1].value = names.slice(1).join(' ') || ''; // Last Name
+                }
+
+                // Fetch stored address from Firestore
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.address) {
+                            // Populate fields if address exists
+                            inputs[0].value = data.firstName || inputs[0].value;
+                            inputs[1].value = data.lastName || inputs[1].value;
+                            inputs[3].value = data.address || '';
+                            inputs[4].value = data.city || '';
+                            inputs[5].value = data.zip || '';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error fetching user address:", e);
+                }
+            } else {
+                // Already handled by auth.js redirect, but good for safety
+                // window.location.href = 'login.html';
+            }
+        });
+
         function selectPayment(el) {
             // Update active class
             document.querySelectorAll('.payment-method').forEach(e => e.classList.remove('active'));
@@ -306,7 +355,7 @@
             }
         }
 
-        function placeOrder() {
+        async function placeOrder() {
             // Get Form Values
             const form = document.getElementById('payment-form');
             if (!form.checkValidity()) {
@@ -315,13 +364,39 @@
             }
 
             const inputs = form.querySelectorAll('input');
+            const firstName = inputs[0].value;
+            const lastName = inputs[1].value;
+            const email = inputs[2].value; // Changed index for email
+            const address = inputs[3].value;
+            const city = inputs[4].value;
+            const zip = inputs[5].value;
+
             const customer = {
-                firstName: inputs[0].value || 'John', // Fallbacks for testing if fields empty
-                lastName: inputs[1].value || 'Doe',
-                address: inputs[3].value || '123 Health St',
-                city: inputs[4].value || 'Chennai',
-                zip: inputs[5].value || '600001'
+                firstName,
+                lastName,
+                email,
+                address,
+                city,
+                zip
             };
+
+            // --- 2. Save Address for Future Use (Auto-fill) ---
+            if (currentUser) {
+                try {
+                    const userRef = doc(db, "users", currentUser.uid);
+                    // Merge with existing data so we don't lose other fields like 'role'
+                    await setDoc(userRef, {
+                        firstName,
+                        lastName,
+                        address,
+                        city,
+                        zip
+                    }, { merge: true });
+                    console.timeLog("Address saved to profile.");
+                } catch (e) {
+                    console.error("Error saving address:", e);
+                }
+            }
 
             // Get active payment method
             const activeMethod = document.querySelector('.payment-method.active').dataset.method;
@@ -331,21 +406,25 @@
 
             // Create Order Object
             const order = {
-                id: Date.now().toString().slice(-6),
-                date: new Date().toISOString(),
                 customer: customer,
                 paymentMethod: activeMethod,
-                items: cart
+                items: cart,
+                userId: currentUser ? currentUser.uid : null // Link order to user
             };
 
-            // Save to LocalStorage for Invoice Page
-            localStorage.setItem('thinaiHubLastOrder', JSON.stringify(order));
+            // Send to Backend
+            window.submitOrderToBackend(order).then(savedOrder => {
+                if (savedOrder) {
+                    // Save to LocalStorage for Invoice Page (using returned order with ID/Date)
+                    localStorage.setItem('thinaiHubLastOrder', JSON.stringify(savedOrder));
 
-            // Clear Cart
-            localStorage.removeItem('thinaiHubCart');
+                    // Clear Cart
+                    localStorage.removeItem('thinaiHubCart');
 
-            // Redirect
-            window.location.href = 'order-success.html';
+                    // Redirect
+                    window.location.href = 'order-success.html';
+                }
+            });
         }
 
         // Initialize checkout data

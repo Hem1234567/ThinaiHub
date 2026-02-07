@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | ThinaiHub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <style>
+        .settings-container {
+            max-width: 600px;
+            margin: 120px auto 60px;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .settings-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-save {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .password-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-reset {
+            background-color: transparent;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="ThinaiHub">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container settings-container reveal">
+        <div class="settings-header">
+            <h2>Account Settings</h2>
+            <p>Manage your profile and preferences</p>
+        </div>
+
+        <form id="profile-form">
+            <div class="form-group">
+                <label>Display Name</label>
+                <input type="text" id="display-name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" disabled style="background:#f9f9f9; cursor:not-allowed;">
+                <small style="color:#888;">Email cannot be changed directly.</small>
+            </div>
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+
+        <div class="password-section">
+            <h3>Password</h3>
+            <p style="margin-bottom:15px; color:#666;">Need to update your password?</p>
+            <button id="reset-password-btn" class="btn-reset">Send Password Reset Email</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './scripts/firebase-config.js';
+        import { onAuthStateChanged, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { updateNavbarUI } from './scripts/auth.js'; // Note: Might need to just rely on auth.js running separately or duplicate logic if modularity is tricky
+
+        const form = document.getElementById('profile-form');
+        const resetBtn = document.getElementById('reset-password-btn');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('display-name').value = user.displayName || '';
+                document.getElementById('email').value = user.email || '';
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            const newName = document.getElementById('display-name').value;
+
+            if (user) {
+                try {
+                    // 1. Update Auth Profile
+                    await updateProfile(user, { displayName: newName });
+
+                    // 2. Update Firestore User Doc
+                    const userRef = doc(db, "users", user.uid);
+                    await updateDoc(userRef, { name: newName });
+
+                    alert("Profile updated successfully!");
+                } catch (error) {
+                    console.error("Error updating profile:", error);
+                    alert("Failed to update profile: " + error.message);
+                }
+            }
+        });
+
+        resetBtn.addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (user && user.email) {
+                try {
+                    await sendPasswordResetEmail(auth, user.email);
+                    alert(`Password reset email sent to ${user.email}. Please check your inbox.`);
+                } catch (error) {
+                    console.error("Error sending reset email:", error);
+                    alert("Error: " + error.message);
+                }
+            }
+        });
+    </script>
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
+</body>
+
+</html>

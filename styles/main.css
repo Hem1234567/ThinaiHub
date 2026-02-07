@@ -401,10 +401,20 @@ img {
     margin: 30px auto;
 }
 
-.product-preview-grid,
+/* Separated for better control */
 .shop-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Home page grid - Centered and limited width */
+.product-preview-grid {
+    display: grid;
+    /* Use minmax with a cap to prevent huge cards */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
+    justify-content: center;
     gap: 50px;
     margin-bottom: var(--spacing-xl);
 }

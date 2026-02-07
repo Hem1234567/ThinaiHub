@@ -12,6 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
 </head>
 
 <body>
@@ -115,51 +116,9 @@
                 <div class="separator reveal delay-100"></div>
                 <p class="reveal delay-200">Nutrient-rich grains for a modern lifestyle.</p>
             </div>
-            <div class="product-preview-grid">
-                <!-- 1. Foxtail Millet -->
-                <div class="product-card reveal delay-100">
-                    <div class="card-image">
-                        <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                        <div class="product-details">
-                            <h3>Foxtail Millet <span class="tamil">(தினை)</span></h3>
-                            <p>Rich in fiber and protein. Ideal for diabetes management.</p>
-                        </div>
-                    </div>
-                    <div class="card-action">
-                        <p class="price">₹150 <small>/ 500g</small></p>
-                        <button class="btn btn-primary add-to-cart" data-name="Foxtail Millet">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 2. Kodo Millet -->
-                <div class="product-card reveal delay-200">
-                    <div class="card-image">
-                        <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                        <div class="product-details">
-                            <h3>Kodo Millet <span class="tamil">(வரகு)</span></h3>
-                            <p>High in antioxidants and good for digestion.</p>
-                        </div>
-                    </div>
-                    <div class="card-action">
-                        <p class="price">₹145 <small>/ 500g</small></p>
-                        <button class="btn btn-primary add-to-cart" data-name="Kodo Millet">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 3. Barnyard Millet -->
-                <div class="product-card reveal delay-300">
-                    <div class="card-image">
-                        <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                        <div class="product-details">
-                            <h3>Barnyard Millet <span class="tamil">(குதிரைவாலி)</span></h3>
-                            <p>Low glycemic index. Perfect for weight loss.</p>
-                        </div>
-                    </div>
-                    <div class="card-action">
-                        <p class="price">₹155 <small>/ 500g</small></p>
-                        <button class="btn btn-primary add-to-cart" data-name="Barnyard Millet">Add to Cart</button>
-                    </div>
-                </div>
+            <div class="product-preview-grid" id="home-products">
+                <!-- Products will be loaded dynamically from Firestore -->
+                <p style="grid-column: 1/-1; text-align: center;">Loading best sellers...</p>
             </div>
             <div class="text-center mt-2">
                 <a href="shop.html" class="btn btn-secondary">View All Products</a>
@@ -194,7 +153,8 @@
         </div>
     </footer>
 
-    <script src="scripts/main.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
 </body>
 
 </html>

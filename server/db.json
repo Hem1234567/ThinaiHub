@@ -1,0 +1,45 @@
+{
+    "products": [
+        {
+            "id": "1",
+            "name": "Foxtail Millet",
+            "tamilName": "தினை",
+            "price": 150,
+            "image": "assets/products/img-1.jpg",
+            "description": "Rich in fiber and protein. Ideal for diabetes management."
+        },
+        {
+            "id": "2",
+            "name": "Kodo Millet",
+            "tamilName": "வரகு",
+            "price": 145,
+            "image": "assets/products/img-1.jpg",
+            "description": "High in antioxidants and good for digestion."
+        },
+        {
+            "id": "3",
+            "name": "Barnyard Millet",
+            "tamilName": "குதிரைவாலி",
+            "price": 155,
+            "image": "assets/products/img-1.jpg",
+            "description": "Low glycemic index. Perfect for weight loss."
+        },
+        {
+            "id": "4",
+            "name": "Little Millet",
+            "tamilName": "சாமை",
+            "price": 160,
+            "image": "assets/products/img-1.jpg",
+            "description": "Packed with iron and minerals. Great for reproductive health."
+        },
+        {
+            "id": "5",
+            "name": "Pearl Millet",
+            "tamilName": "கம்பு",
+            "price": 150,
+            "image": "assets/products/img-1.jpg",
+            "description": "Cooling properties, great for summer options."
+        }
+    ],
+    "orders": []
+}

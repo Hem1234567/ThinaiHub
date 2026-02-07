@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop | ThinaiHub</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <style>
         .shop-header {
             background-color: transparent;
@@ -87,81 +88,9 @@
     </header>
 
     <!-- Product Grid -->
-    <section class="container shop-grid">
-        <!-- 1. Foxtail Millet -->
-        <div class="product-card reveal delay-100">
-            <div class="card-image">
-                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                <div class="product-details">
-                    <h3>Foxtail Millet <span class="tamil">(தினை)</span></h3>
-                    <p>Rich in fiber and protein. Ideal for diabetes management.</p>
-                </div>
-            </div>
-            <div class="card-action">
-                <p class="price">₹150 <small>/ 500g</small></p>
-                <button class="btn btn-primary add-to-cart" data-name="Foxtail Millet">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- 2. Kodo Millet -->
-        <div class="product-card reveal delay-150">
-            <div class="card-image">
-                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                <div class="product-details">
-                    <h3>Kodo Millet <span class="tamil">(வரகு)</span></h3>
-                    <p>High in antioxidants and good for digestion.</p>
-                </div>
-            </div>
-            <div class="card-action">
-                <p class="price">₹145 <small>/ 500g</small></p>
-                <button class="btn btn-primary add-to-cart" data-name="Kodo Millet">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- 3. Barnyard Millet -->
-        <div class="product-card reveal delay-200">
-            <div class="card-image">
-                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                <div class="product-details">
-                    <h3>Barnyard Millet <span class="tamil">(குதிரைவாலி)</span></h3>
-                    <p>Low glycemic index. Perfect for weight loss.</p>
-                </div>
-            </div>
-            <div class="card-action">
-                <p class="price">₹155 <small>/ 500g</small></p>
-                <button class="btn btn-primary add-to-cart" data-name="Barnyard Millet">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- 4. Little Millet -->
-        <div class="product-card reveal delay-250">
-            <div class="card-image">
-                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                <div class="product-details">
-                    <h3>Little Millet <span class="tamil">(சாமை)</span></h3>
-                    <p>Packed with iron and minerals.</p>
-                </div>
-            </div>
-            <div class="card-action">
-                <p class="price">₹160 <small>/ 500g</small></p>
-                <button class="btn btn-primary add-to-cart" data-name="Little Millet">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- 5. Pearl Millet -->
-        <div class="product-card reveal delay-300">
-            <div class="card-image">
-                <img src="assets/products/img-1.jpg" alt="Foxtail Millet">
-                <div class="product-details">
-                    <h3>Pearl Millet <span class="tamil">(கம்பு)</span></h3>
-                    <p>Cooling properties, great for summer.</p>
-                </div>
-            </div>
-            <div class="card-action">
-                <p class="price">₹140 <small>/ 500g</small></p>
-                <button class="btn btn-primary add-to-cart" data-name="Pearl Millet">Add to Cart</button>
-            </div>
-        </div>
+    <section class="container shop-grid" id="shop-products">
+        <p style="text-align: center; grid-column: 1/-1; font-size: 1.2rem; color: var(--color-text-muted);">Loading
+            harvest...</p>
     </section>
 
     <!-- Footer -->
@@ -192,7 +121,8 @@
         </div>
     </footer>
 
-    <script src="scripts/main.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
+    <script type="module" src="scripts/main.js"></script>
 </body>
 
 </html>

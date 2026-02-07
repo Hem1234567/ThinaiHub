@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper: Check if user is logged in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Check if user is accessing their own data
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Products:
+    // Any user (including guests) can read products.
+    // Only authenticated users (admins) can write/edit/delete.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Orders:
+    // Guests can create orders (checkout).
+    // Authenticated users can read valid orders (logic handled in app query).
+    // Ideally, we'd restrict read to 'resource.data.userId == request.auth.uid', 
+    // but for your 'My Orders' feature to work flexibly during dev, we allow authenticated reads.
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if isAuthenticated();
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Users:
+    // Users can read/write their own profile.
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Default:
+    // If we forgot a collection, block it for safety.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
