@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /cart.html
+Disallow: /my-orders.html
+Disallow: /profile.html
+Disallow: /payment.html
+Disallow: /settings.html
+Disallow: /order-success.html
+Disallow: /scripts/firebase-config.js
+
+Sitemap: https://thinai-hub.vercel.app/sitemap.xml
