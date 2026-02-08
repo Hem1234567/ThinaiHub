@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="manifest" href="manifest.json">
     <script src="scripts/security.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
         .admin-page {
             padding: 40px;
@@ -156,7 +157,12 @@
 
             <!-- Orders Panel -->
             <div id="orders" class="panel active">
-                <h3>Recommended Orders</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Recommended Orders</h3>
+                    <button onclick="downloadOrdersExcel()" class="btn"
+                        style="background-color: #2ecc71; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Download
+                        Excel</button>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -371,6 +377,67 @@
                 alert('Failed to update status.');
             }
         }
+
+        async function downloadOrdersExcel() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "orders"));
+                const ordersData = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.date ? new Date(data.date).toLocaleDateString() + ' ' + new Date(data.date).toLocaleTimeString() : '-';
+                    const customerName = data.customer ? (data.customer.firstName + ' ' + data.customer.lastName) : 'Guest';
+                    const email = data.customer ? data.customer.email : (data.email || '-');
+                    const phone = data.shippingAddress ? data.shippingAddress.phone : (data.phone || '-');
+
+                    // Format Address
+                    let address = '-';
+                    if (data.shippingAddress) {
+                        const addr = data.shippingAddress;
+                        address = `${addr.address}, ${addr.city}, ${addr.state} - ${addr.zipCode}`;
+                    }
+
+                    // Format Items
+                    let itemsString = '';
+                    if (data.items && Array.isArray(data.items)) {
+                        itemsString = data.items.map(i => `${i.name} (x${i.quantity})`).join(', ');
+                    }
+
+                    ordersData.push({
+                        'Order ID': doc.id,
+                        'Date': date,
+                        'Customer Name': customerName,
+                        'Email': email,
+                        'Phone': phone,
+                        'Shipping Address': address,
+                        'Payment Mode': data.paymentMethod || 'COD', // Default to COD if not specified
+                        'Total Amount': data.total || 0,
+                        'Status': data.status || 'Pending',
+                        'Items': itemsString
+                    });
+                });
+
+                if (ordersData.length === 0) {
+                    alert("No orders to download.");
+                    return;
+                }
+
+                // Create Worksheet and Workbook
+                const ws = XLSX.utils.json_to_sheet(ordersData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Orders");
+
+                // Generate Excel File
+                XLSX.writeFile(wb, "ThinaiHub_Orders.xlsx");
+
+            } catch (err) {
+                console.error("Error downloading Excel:", err);
+                alert("Failed to download Excel file. See console for details.");
+            }
+        }
+
+        // Make it global
+        window.downloadOrdersExcel = downloadOrdersExcel;
 
         // --- Products ---
         async function fetchProducts() {
