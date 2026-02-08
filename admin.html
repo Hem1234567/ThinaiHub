@@ -390,17 +390,16 @@
                     const email = data.customer ? data.customer.email : (data.email || '-');
                     const phone = data.shippingAddress ? data.shippingAddress.phone : (data.phone || '-');
 
-                    // Format Address
+                    // Format Address: Data is stored in data.customer (address, city, zip)
                     let address = '-';
-                    if (data.shippingAddress) {
+                    // Check if address is directly in customer object (new format from payment.html)
+                    if (data.customer && data.customer.address) {
+                        const c = data.customer;
+                        address = `${c.address}, ${c.city}, ${c.zip}`;
+                    } else if (data.shippingAddress) {
+                        // Fallback for any old data structure using shippingAddress
                         const addr = data.shippingAddress;
-                        address = `${addr.address}, ${addr.city}, ${addr.state} - ${addr.zipCode}`;
-                    }
-
-                    // Format Items
-                    let itemsString = '';
-                    if (data.items && Array.isArray(data.items)) {
-                        itemsString = data.items.map(i => `${i.name} (x${i.quantity})`).join(', ');
+                        address = `${addr.address}, ${addr.city}, ${addr.state || ''} - ${addr.zipCode || addr.zip || ''}`;
                     }
 
                     ordersData.push({
