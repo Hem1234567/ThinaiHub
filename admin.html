@@ -379,45 +379,90 @@
         }
 
         async function downloadOrdersExcel() {
+            if (typeof XLSX === 'undefined') {
+                alert("Excel library (SheetJS) failed to load. Please check your internet connection and refresh.");
+                return;
+            }
+
             try {
                 const querySnapshot = await getDocs(collection(db, "orders"));
                 const ordersData = [];
 
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const date = data.date ? new Date(data.date).toLocaleDateString() + ' ' + new Date(data.date).toLocaleTimeString() : '-';
-                    const customerName = data.customer ? (data.customer.firstName + ' ' + data.customer.lastName) : 'Guest';
-                    const email = data.customer ? data.customer.email : (data.email || '-');
-                    const phone = data.shippingAddress ? data.shippingAddress.phone : (data.phone || '-');
+                    try {
+                        const data = doc.data();
 
-                    // Format Address: Data is stored in data.customer (address, city, zip)
-                    let address = '-';
-                    // Check if address is directly in customer object (new format from payment.html)
-                    if (data.customer && data.customer.address) {
-                        const c = data.customer;
-                        address = `${c.address}, ${c.city}, ${c.zip}`;
-                    } else if (data.shippingAddress) {
-                        // Fallback for any old data structure using shippingAddress
-                        const addr = data.shippingAddress;
-                        address = `${addr.address}, ${addr.city}, ${addr.state || ''} - ${addr.zipCode || addr.zip || ''}`;
+                        // --- Safe Field Extraction ---
+
+                        // Date
+                        let date = '-';
+                        try {
+                            if (data.date) {
+                                date = new Date(data.date).toLocaleDateString() + ' ' + new Date(data.date).toLocaleTimeString();
+                            }
+                        } catch (e) { console.warn("Invalid date for order", doc.id); }
+
+                        // Customer Name
+                        let customerName = 'Guest';
+                        if (data.customer) {
+                            customerName = (data.customer.firstName || '') + ' ' + (data.customer.lastName || '');
+                        } else if (data.name) {
+                            customerName = data.name;
+                        }
+
+                        // Email
+                        const email = (data.customer && data.customer.email) || data.email || '-';
+
+                        // Phone
+                        const phone = (data.customer && data.customer.phone) || (data.shippingAddress && data.shippingAddress.phone) || data.phone || '-';
+
+                        // Address extraction logic (Safe)
+                        let address = '-';
+                        if (data.customer && (data.customer.address || data.customer.city)) {
+                            // New format
+                            const c = data.customer;
+                            address = `${c.address || ''}, ${c.city || ''} - ${c.zip || ''}`;
+                        } else if (data.shippingAddress) {
+                            // Old format
+                            const a = data.shippingAddress;
+                            address = `${a.address || ''}, ${a.city || ''}, ${a.state || ''} - ${a.zipCode || a.zip || ''}`;
+                        }
+
+                        // Payment Mode
+                        const paymentMode = data.paymentMethod || 'COD';
+
+                        // Total
+                        const total = data.total || 0;
+
+                        // Status
+                        const status = data.status || 'Pending';
+
+                        // Items
+                        let itemsString = '';
+                        if (data.items && Array.isArray(data.items)) {
+                            itemsString = data.items.map(i => `${i.name || 'Item'} (x${i.quantity || 1})`).join(', ');
+                        }
+
+                        ordersData.push({
+                            'Order ID': doc.id,
+                            'Date': date,
+                            'Customer Name': customerName.trim(),
+                            'Email': email,
+                            'Phone': phone,
+                            'Shipping Address': address,
+                            'Payment Mode': paymentMode,
+                            'Total Amount': total,
+                            'Status': status,
+                            'Items': itemsString
+                        });
+
+                    } catch (innerError) {
+                        console.error("Skipping malformed order:", doc.id, innerError);
                     }
-
-                    ordersData.push({
-                        'Order ID': doc.id,
-                        'Date': date,
-                        'Customer Name': customerName,
-                        'Email': email,
-                        'Phone': phone,
-                        'Shipping Address': address,
-                        'Payment Mode': data.paymentMethod || 'COD', // Default to COD if not specified
-                        'Total Amount': data.total || 0,
-                        'Status': data.status || 'Pending',
-                        'Items': itemsString
-                    });
                 });
 
                 if (ordersData.length === 0) {
-                    alert("No orders to download.");
+                    alert("No valid orders found to download.");
                     return;
                 }
 
@@ -431,7 +476,7 @@
 
             } catch (err) {
                 console.error("Error downloading Excel:", err);
-                alert("Failed to download Excel file. See console for details.");
+                alert("Failed to download Excel file. Check console for details.");
             }
         }
 
