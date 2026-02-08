@@ -439,6 +439,73 @@
         // Make it global
         window.downloadOrdersExcel = downloadOrdersExcel;
 
+        async function exportToGoogleSheets() {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwMkbxH4U--2f_6tDHVlRetex43kCeIAAKg-UvE3KV4lgMJXtKuGdIQQzqKgwDBts/exec";
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "orders"));
+                const orders = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.date ? new Date(data.date).toLocaleDateString() + ' ' + new Date(data.date).toLocaleTimeString() : '-';
+                    const customerName = data.customer ? (data.customer.firstName + ' ' + data.customer.lastName) : 'Guest';
+                    const email = data.customer ? data.customer.email : (data.email || '-');
+                    const phone = data.shippingAddress ? data.shippingAddress.phone : (data.phone || '-');
+
+                    let address = '-';
+                    if (data.shippingAddress) {
+                        const addr = data.shippingAddress;
+                        address = `${addr.address}, ${addr.city}, ${addr.state} - ${addr.zipCode}`;
+                    }
+
+                    let itemsString = '';
+                    if (data.items && Array.isArray(data.items)) {
+                        itemsString = data.items.map(i => `${i.name} (x${i.quantity})`).join(', ');
+                    }
+
+                    orders.push({
+                        id: doc.id,
+                        date: date,
+                        customerName: customerName,
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        paymentMode: data.paymentMethod || 'COD',
+                        total: data.total || 0,
+                        status: data.status || 'Pending',
+                        items: itemsString
+                    });
+                });
+
+                if (orders.length === 0) {
+                    alert("No orders to export.");
+                    return;
+                }
+
+                alert("Exporting " + orders.length + " orders... detailed logs in console.");
+                console.log("Sending data to Sheets:", orders);
+
+                // Use no-cors mode to avoid CORS errors, but we can't read the response.
+                // This is a known limitation with simple Apps Script Web Apps when called from client-side JS.
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ orders: orders })
+                });
+
+                alert("Export command sent! Check your Google Sheet in a few seconds.");
+
+            } catch (err) {
+                console.error("Error exporting to Sheets:", err);
+                alert("Failed to export. Check console.");
+            }
+        }
+        window.exportToGoogleSheets = exportToGoogleSheets;
+
         // --- Products ---
         async function fetchProducts() {
             try {
